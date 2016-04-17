@@ -4,7 +4,7 @@ html {
 body {
     position: relative;
     padding-top: 69px;
-    background: white;
+    background: #DDDCE2 url(../img/layout/content_bg.jpg) repeat left top;
     -webkit-font-smoothing: antialiased;
     font-size: 14px;
     font-family: 'Lato', sans-serif !important;
