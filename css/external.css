@@ -55,6 +55,28 @@
         margin-left: 25px;
     }
 }
+.blog-abstract{
+    margin-top: 0.5rem;
+    font-size: 19px;
+    font-weight: 300;
+    color: #222;
+    line-height: 1.5;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    
+}
+.blog-text{
+    margin-top: 0.5rem;
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.blog-title{
+    color:#303030;
+    font-weight: 400;
+}
+.blog-date{
+    color:#9a9a9a;
+}
 
 /* Coming Soon
 -------------------------------------------------- */
