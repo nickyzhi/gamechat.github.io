@@ -1,0 +1,59 @@
+html {
+    margin: 0;
+}
+body {
+    font-size: 17px;
+    padding-top: 90px;
+}
+.navbar{
+    background-image: none;
+    background-color: white;
+}
+#profilePic{
+    width:80%;
+    height:80%;
+}
+
+
+.my-photo {
+    max-width: 270px;
+}
+
+.email-img {
+    padding-top: 0.1em;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 21px;
+}
+
+.linkedin-img {
+    padding-top: 0.5em;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 21px;
+}
+.weibo-img {
+    padding-top: 0.5em;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 24px;
+}
+.twitter-img {
+    padding-top: 0.4em;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 24px;
+}
+
+.github-img {
+    padding-top: 0.3em;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 24px;
+}
+.instagram-img {
+    padding-top: 0.3em;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 27px;
+}
