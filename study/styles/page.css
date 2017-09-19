@@ -1,0 +1,170 @@
+#controls{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    padding: 5px 0 5px 3%;
+    background-color: white;
+    border-bottom: 1px solid gray;
+    height:60px;
+}
+
+
+.instructionModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 3; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    height:80%;
+}
+.modal-content_content{
+    height:80%;
+}
+.modal-content_action{
+    height:10%;
+}
+.questionnaire{
+
+    display: none; /* Hidden by default */
+    left: 0;
+    top: 0;
+    margin-top: 60px;
+    width: 100%; /* Full width */
+    height: 100vh; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+}
+
+button{
+    background-color: #3f51b5;
+    font-size: 20px;
+    color:white;
+    margin-top:5px;
+    height:40px;
+}
+
+
+.agreeButton{
+    width:150px;
+    float:right;
+}
+.questionButton{
+    width: 500px;
+    float:right;
+}
+
+a,a:hover{
+
+    color:white;
+}
+
+#questionnaire aside{
+  background: rgb(63,81,181);
+  width: 70%;
+  max-width: 1000px;
+  padding: 1em;
+  border-radius: 13px;
+  color: #fff;
+  margin-bottom: 2em;
+  font-size: 22px;
+}
+
+#questionnaire  .question{
+  font-weight: 700;
+  margin-left: 20px;
+}
+#questionnaire  .survey-grid{
+  max-width: 1000px;
+  margin-left: 30px;
+  margin-top: -10px;
+  margin-bottom: 30px;
+}
+#questionnaire  .mdl-radio__label{
+  margin-left: -23px;
+  margin-top: -18px;
+  position: absolute;
+  white-space: nowrap;
+  color: #777;
+  font-size: 0.9em;
+  font-weight: 300;
+}
+#questionnaire  .survey-spinner{
+  margin-top: 3px;
+  position: absolute;
+}
+#questionnaire  .text-field{
+  margin-left: 70px;
+  width: 400px;
+}
+#questionnaire  h6{
+  font-style: italic;
+}
+#questionnaire  img{
+  border-style: solid;
+  border-width: 2px;
+  border-color: #666;
+  max-width: 300px;
+  max-height: 300px;
+  margin-top: 50px;
+}
+#questionnaire  .whitespace{
+  height: 200px;
+}
+#questionnaire  .question-height{
+  height: 40px;
+}
+
+#questionnaire  .mdl-radio.is-upgraded .mdl-radio__button {
+  -webkit-appearance: checkbox;
+  width: auto;
+  height: auto;
+  left: 2px;
+  top: 5px;
+}
+
+#questionnaire  #turker-id{
+  font-size: 2em;
+  font-weight: 700;
+  margin-left: 50px;
+}
+
+
+#questionnaire  .rowHeader{
+  margin-top: 20px;
+  margin-right: -40px;
+}
+#questionnaire .submitbutton {
+    width:100px;
+    background-color: #3f51b5;
+    height:50px;
+    font-size: 20px;
+    color:white;
+  }
+#questionnaire label{
+    margin-left: 30px;
+  }
+  
+#questionnaire .storyid, .workerid, .age{
+    font-size: 17px;
+    height:40px;
+    margin-bottom: 20px;
+  }
+#questionnaire input
+  {
+    font-size:17px;
+    width:30%;
+  }
+

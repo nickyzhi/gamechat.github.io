@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+
+<h1>Interaction Flow</h1>
+
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+// some code initialized from: http://bl.ocks.org/chrisbrich/0759cd5d7cab4db4610b
+
+// chart variables
+
+
+var margin = {top: 75, right: 10, bottom: 100, left: 40},
+    size = 5,
+    width = 1000 - margin.left - margin.right,
+    height = 830 - margin.top - margin.bottom;
+
+var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+// create the confidence interval chart
+
+
+// create first CI bullet chartcreateConfidenceIntervalBulletChart(file, "Average Model Across All 5 Comprehension Questions");
+
+
+for (var i=1; i<4; i++){
+  filepath = "layout"+i.toString()+"flow.csv"
+  createConfidenceIntervalBulletChart(filepath)
+}
+
+
+
+// support creating multiple CI bullet charts through function (pass in filename)
+function createConfidenceIntervalBulletChart(f){
+  d3.text(f, function(text) {
+    var data = d3.csvParseRows(text).map(function(row) {
+      return row.map(function(value) {
+        return +value;
+      });
+    });
+
+    var maxlen = Math.max.apply(Math,data.map(function(o){return o.length;}))
+    var arraylen = data.length
+    var blockWidth = width/maxlen;
+    var blockHeight = height/arraylen;
+
+    var svg = d3.select("body").append("svg")
+    .attr("width", width  + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("class","container")
+    .attr("transform", "translate(" + 90 + "," + margin.top + ")");
+
+    
+    var row = svg.append("g").selectAll("g")
+      .data(data)
+      .enter().append("g")
+        .attr("transform", function(d,i) { return "translate(0," + blockHeight*i + ")"; })
+      .selectAll(".rect")
+      .data(function(d){return d;})
+      .enter().append("rect")
+      .attr("x", function(d,i) {
+        return i*blockWidth; 
+      })
+      .attr("y", 0)
+      .attr("width", blockWidth)
+      .attr("height", blockHeight)
+      .style("fill", function(d,i) {if (d==1) return "rgba(31, 119, 180, 0.5)"; else return "rgba(255, 127, 14, 0.5)" })
+      .style("stroke", "#222")
+      .style("stroke-opacity", .01);
+
+    if (f[6]=="1"){
+      var title = "User Interaction Behavior in Vertical Layout";
+    }else if(f[6]=="2"){
+      var title = "User Interaction Behavior in Side-by-Side Layout";
+    }else{
+      var title = "User Interaction Behavior in Slideshow Layout";
+    }
+    
+    svg.append("text")
+        .attr("x", (width / 2)-45)             
+        .attr("y", 0)
+        .attr("text-anchor", "middle")  
+        .attr("fill", "black")
+        .attr("font-weight","bold")
+        .attr("font-size","33px")
+        .text(title);
+
+    svg.append("line")
+        .attr("x1", 0)             
+        .attr("y1", function(){
+          if (arraylen == 67){ //layout 2
+            return 33*blockHeight;
+          }else if(arraylen == 69){ //layout 3
+            return 33*blockHeight;
+          }else{ //layout 1
+            return 54*blockHeight;
+          }
+        })
+        .attr("x2", width)             
+        .attr("y2", function(){
+          if (arraylen == 67){ //layout 2
+            return 33*blockHeight;
+          }else if(arraylen == 69){ //layout 3
+            return 33*blockHeight;
+          }else{ //layout 1
+            return 54*blockHeight;
+          }
+        })
+        .attr("stroke-width", "2")
+        .attr("stroke","black");
+  });
+}
+
+
+
+
+
+</script>

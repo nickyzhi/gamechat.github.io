@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Interactive Coupling of Text and Visualization</title>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-58620037-6', 'auto');
+  ga('send', 'pageview');
+
+</script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono|Roboto:300,400,500,700" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.1/material.indigo-pink.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="styles/introjs.min.css">
+    <link rel="stylesheet" type="text/css" href="styles/page.css" />
+    <script defer src="https://code.getmdl.io/1.1.1/material.min.js"></script>
+    <style>
+    h1{
+        margin:30px,0,20px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+    h3{
+        margin:30px,0,20px;
+        font-size: 19px;
+        text-align: center;
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+    #storyContent{
+    position: absolute;
+    top: 55px;
+    bottom: 0;
+    left: 40px;
+    width: 30%;
+    min-width: 250px;
+    overflow-y: scroll;
+    border-right: 1px solid gray;
+    }
+    p{
+        font-size:17px;
+        line-height:1.6;
+        font-weight: 400; 
+        font-style: normal;
+        font-family: georgia;
+    }
+    #storyVis{
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    right: 20px;
+    width: 66%;
+    min-width: 500px;
+    height:92%;
+    }
+    .county-borders {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 0.5px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      pointer-events: none;
+    }
+    #maps{
+        height:305px;
+        border-bottom: 1px dotted rgba(128,128,128, .3);
+    }
+    #others{
+        width:100%;
+        height:calc(100vh - 370px);
+    }
+    #others1{
+        width:58%;
+        height:96%;
+    }
+    #others2{
+        width:41%;
+        height:96%;
+    }
+    #degreeChart {
+        display: block;
+        width:100%;
+        min-width: 300px;
+        height:55%;
+        min-height: 200px;
+        border-bottom: 1px dotted rgba(128,128,128, .3);
+    }
+    #thankyouPadding{
+      height:100px;
+    }
+    #salaryChart{
+        display: block;
+        width:100%;
+        min-width:300px;
+        height:50%;
+        min-height: 200px;
+    }
+
+    #citizenChart{
+        display: block;
+        width:100%;
+        min-width:300px;
+        height:50%;
+        min-height: 200px;
+    }
+
+    #arrivalChart{
+        display: block;
+        width:100%;
+        min-width: 300px;
+        height:45%;
+        min-height: 180px;
+    }
+    
+    #SomaliaChart{width:100%;}
+    #IraqChart{width:100%;}
+    #LibyaChart{width:100%;}
+    #SudanChart{width:100%;}
+    #IranChart{width:100%;}
+    #YemenChart{width:100%;}
+    #SyriaChart{width:100%;}
+    #mapChart{ width:100%;height:150px;}
+    .countrymap{
+        height:95%;
+        max-width: 100%;
+        max-height: 150px;
+        margin-left:10%;
+        margin-top:2%;
+    }
+    .submitbutton {
+        width:100px;
+        background-color: #3f51b5;
+        height:50px;
+        font-size: 20px;
+        color:white;
+    }
+    .comprehensionButton,.demongraphicButton,.engagementButton,.recallButton,.continueToDemonButton,.continueToEngButton,.continueToRecallButton{
+        width:150px;
+        font-size: 20px;
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+    #comprehensionQuestions,#demongraphicQuestions,#engagementQuestions,#recallQuestions, #demongraphicIntroduction, #engagementIntroduction, #recallIntroduction, #submitbuttonQuestions{
+        display:none;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="controls" class="container">
+        <div class="row">
+            <div class="col-md-6 col-xs-6 col-sm-6 col-lg-6">
+                <h3>Story ID: 2</h3>
+            </div>
+            <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+              <button  id="instructionButton" class="instructionButton" data-step="1" data-intro="Click this button to read the instructions again if necessary." >instruction</button>
+            </div>
+            <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+              <button  id="questionControlButton" data-step="2" data-intro="Click this button to go back to the story content when answering the questionnaire." onclick="toggleStory()">Go Back to Story</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <div id="instructionModal" class="instructionModal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <h3 class="modal-content_title">Instructions</h3>
+          <div class="modal-content_content">
+              <iframe class="consent" src="intro.html" width="100%" height="100%" frameborder="0"></iframe>
+          </div>
+          <div class="modal-content_actions">
+              <button type="button" class="agreeButton">I Agree</button>
+          </div>
+      </div>
+
+    </div>
+
+
+    <div id="article" class = "article">
+        <div class="row">
+            <div class="col-md-3" id = "storyContent" >
+                
+                <h1 data-step="5" data-intro="Start reading from here!">Immigrants From Banned Nations: Educated, Mostly Citizens and Found in Every State</h1>
+                <div>
+                <p >Immigration from the seven countries targeted by President Trump has been going on for decades but has never been much more than a trickle. Altogether, immigrants and visitors from those countries are about 2 percent of all foreign-born people living in the United States.</p>
+                <p data-step="3" data-intro="You can scroll down to see read the story on the left. For all underline sentences, you can find more information from the charts.">Most of these people are naturalized citizens and are not directly affected by the ban. But the status of tens of thousands of those with permanent resident status is not as clear, as administration officials have said they may be subject to greater scrutiny if they travel abroad.</p>
+                <p>And visa holders may not be able to return to the United States if they go out of the country.</p>
+                <p>Here’s a look at who these people are and how they have settled in the United States.</p>
+                </div>
+                <h3>Many Have College Degrees</h3>
+                <p>As a whole, residents from the seven predominantly Muslim countries, especially Iranians and the small group of Libyans, are better educated than the rest of America. People from Syria and Sudan also tend to be better educated than the national average.</p>
+                <h3>Some Have Prospered</h3>
+                <p>Residents from Iran, Syria and Libya, who are more likely than the population as a whole to be managers, engineers and teachers, make close to or above the median income for the entire American population.</p>
+                <p>Somalis and Sudanese are overrepresented in blue-collar jobs in manufacturing and transportation, and make less. The median income of Somalis is less than half the United States average.</p>
+                <h3>Iraqis, Somalis and Sudanese Are More Recent Arrivals</h3>
+
+
+                <p >The pattern is roughly commensurate with how long immigrant communities have been in the United States, with nearly half of Iranians moving there before 1990. Nearly two-thirds of Iraqis, Somalis and Sudanese have arrived since 2000.</p>
+                <h3>Most Are Now Citizens</h3>
+                <p>Most United States residents from these seven countries have become citizens, a rate higher than that of the foreign-born population in the country as a whole. A small number, about 10,000, have served in the American military.</p>
+                <h3>They Have Settled in Every State</h3>
+                <p>Southern California has absorbed the largest number of residents from these countries, followed by the Detroit area – both places with substantial Arab and Muslim communities. But some of the groups, especially the large contingent of Somalis, are widely dispersed.</p>
+                <p>Hundreds of thousands of Iranians live in suburbs north of Los Angeles, areas that have also drawn many Iraqis, Syrians and Yemenis.</p>
+                <p>Thousands of Iraqis and Yemenis have settled in the Detroit area. A large contingent of Syrians lives in Brooklyn, but they have also settled in Burbank and Glendale, Calif., and the Detroit area.</p>
+                <p>Somalis and Sudanese have settled in a very different pattern, and tend to be more isolated. Minneapolis has the most Somali-born residents, but Columbus, Ohio, and Seattle also have significant communities. Des Moines has a large number of Sudanese residents, who are also numerous in Texas and Virginia.</p>
+                <h3>Three Were Involved in Attacks</h3>
+                <p>Of the more than 856,000 immigrants, visa holders and green-card holders originally from the countries affected by the ban, just three are known to have carried out violent attacks inside the United States since Sept.11, 2001, according to David Sterman, an analyst at the New America think tank who maintains a database of terrorist attacks in the United States.</p>
+                <p>One of the attackers was born in Iran and was a naturalized citizen when he drove his S.U.V into a crowd at the University of North Carolina at Chapel Hill in 2006.</p>
+                <p>The two others were born in Somalia and entered the United States as refugees. One of them stabbed at least 10 people in a mall in Minnesota. The other rammed a car into pedestrians on a sidewalk and stabbed students at the campus of Ohio State University. Both attacks occurred in 2016.</p>
+                <p>Since Sept.11, 2001, a vast majority of the perpetrators of terrorist attacks came from countries not listed in the ban, and many were born in the United States.</p>
+
+
+            <hr>
+                <h2>Make sure you have fully read and comprehended the story.</h2>
+            <hr>
+                <h2>Now you can press the buttion below.</h2>
+                <button class="questionButton" onclick="toggleQuestionnaire()">JUMP TO QUESTIONNAIRE</button>
+                <h1></h1>     
+                
+    
+            </div>
+            <div class="col-md-9 col-xs-9 col-sm-9 col-lg-9" id="storyVis">
+                <div id="maps" class="row" >
+                    <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+                        <div id="mapChart">
+                            <img class = "countrymap" src="img/banCountryMap.png">
+                        </div>
+                        <div id="SyriaChart"></div>
+
+                    </div>
+                    <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+                        <div id="SomaliaChart"></div>
+                         <div id="YemenChart"></div>
+                    </div>
+                    <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+                        <div id="IranChart"></div>
+                        <div id="SudanChart"></div>
+                    </div>
+                    <div class="col-md-3 col-xs-3 col-sm-3 col-lg-3">
+                        <div id="IraqChart"></div>
+                        <div id="LibyaChart"></div>
+                    </div>
+                </div>
+                <div id="others" class="row">
+                    <div class="col-md-7 col-xs-7 col-sm-7 col-lg-7" id="others1">
+                        <div id="degreeChart" data-step="4" data-intro="These are supplementary charts, be sure to fully comprehend all the charts."></div>
+                        <div id="arrivalChart" ></div>
+                    </div>
+                    <div class="col-md-5 col-xs-5 col-sm-5 col-lg-5" id="others2">
+                        <div id="salaryChart" ></div>
+                        <div id="citizenChart"></div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div> 
+    </div>
+
+    <div id="questionnaire" class="questionnaire">
+        <!-- <iframe width="100%" height="100%" frameborder="0" src="questionnaire.html"></iframe> -->
+         <form id="gform" method="POST" class="pure-form pure-form-stacked" action="https://script.google.com/macros/s/AKfycbxUzcnFO8iD0t46CN6qdtJQosdJRJu40koqGjH9zVbT2KU-F2M/exec">
+        <div id="comprehensionIntroduction">
+            <aside class="comprehension">
+            Please answer questions thoughtfully and completely. You can click the "Go back to story" button to return to the story if necessary. Click the “START” button to begin.
+            </aside>
+            <button id = "comprehensionButton" class="comprehensionButton" onclick="toggleComprehension()">START</button>
+        </div>
+        <div id="comprehensionQuestions">
+
+            <h1></h1>
+
+
+            <fieldset>
+              <span class="question">
+                1. Of the countries mentioned in the article, which country has the highest immigration population in the US?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-1-1">
+                <input type="radio" required name="q-com-1" id="q-com-1-1" value="Somalia" class="mdl-radio__button">
+                <span class="mdl-radio__label">Somalia</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-1-2">
+                <input type="radio" required name="q-com-1" id="q-com-1-2" value="Iran" class="mdl-radio__button">
+                <span class="mdl-radio__label">Iran</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-1-3">
+                <input type="radio" required name="q-com-1" id="q-com-1-3" value="Sudan" class="mdl-radio__button">
+                <span class="mdl-radio__label">Sudan</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-1-4">
+                <input type="radio" required name="q-com-1" id="q-com-1-4" value="Iraq" class="mdl-radio__button">
+                <span class="mdl-radio__label">Iraq</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-1-1">
+                <input type="radio" required name="q-aftercom-1" id="q-aftercom-1-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-1-2">
+                <input type="radio" required name="q-aftercom-1" id="q-aftercom-1-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-1-3">
+                <input type="radio" required name="q-aftercom-1" id="q-aftercom-1-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-1-4">
+                <input type="radio" required name="q-aftercom-1" id="q-aftercom-1-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-1-5">
+                <input type="radio" required name="q-aftercom-1" id="q-aftercom-1-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-2-1">
+                <input type="radio" required name="q-aftercom-2" id="q-aftercom-2-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-2-2">
+                <input type="radio" required name="q-aftercom-2" id="q-aftercom-2-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-2-3">
+                <input type="radio" required name="q-aftercom-2" id="q-aftercom-2-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-2-4">
+                <input type="radio" required name="q-aftercom-2" id="q-aftercom-2-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-2-5">
+                <input type="radio" required name="q-aftercom-2" id="q-aftercom-2-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                2. How does the median income of Iranian immigrants living in the US compare to the US median income?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-2-1">
+                <input type="radio" required name="q-com-2" id="q-com-2-1" value="Higher" class="mdl-radio__button">
+                <span class="mdl-radio__label">Higher</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-2-2">
+                <input type="radio" required name="q-com-2" id="q-com-2-2" value="Lower" class="mdl-radio__button">
+                <span class="mdl-radio__label">Lower</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-2-3">
+                <input type="radio" required name="q-com-2" id="q-com-2-3" value="Same" class="mdl-radio__button">
+                <span class="mdl-radio__label">Same</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-3-1">
+                <input type="radio" required name="q-aftercom-3" id="q-aftercom-3-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-3-2">
+                <input type="radio" required name="q-aftercom-3" id="q-aftercom-3-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-3-3">
+                <input type="radio" required name="q-aftercom-3" id="q-aftercom-3-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-3-4">
+                <input type="radio" required name="q-aftercom-3" id="q-aftercom-3-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-3-5">
+                <input type="radio" required name="q-aftercom-3" id="q-aftercom-3-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-4-1">
+                <input type="radio" required name="q-aftercom-4" id="q-aftercom-4-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-4-2">
+                <input type="radio" required name="q-aftercom-4" id="q-aftercom-4-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-4-3">
+                <input type="radio" required name="q-aftercom-4" id="q-aftercom-4-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-4-4">
+                <input type="radio" required name="q-aftercom-4" id="q-aftercom-4-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-4-5">
+                <input type="radio" required name="q-aftercom-4" id="q-aftercom-4-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                3. Which of the following cities has the most Somali-born residents?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-3-1">
+                <input type="radio" required name="q-com-3" id="q-com-3-1" value="Minneapolis" class="mdl-radio__button">
+                <span class="mdl-radio__label">Minneapolis</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-3-2">
+                <input type="radio" required name="q-com-3" id="q-com-3-2" value="Columbus" class="mdl-radio__button">
+                <span class="mdl-radio__label">Columbus</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-3-3">
+                <input type="radio" required name="q-com-3" id="q-com-3-3" value="Seattle" class="mdl-radio__button">
+                <span class="mdl-radio__label">Seattle</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-3-4">
+                <input type="radio" required name="q-com-3" id="q-com-3-4" value="Los Angeles" class="mdl-radio__button">
+                <span class="mdl-radio__label">Los Angeles</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-5-1">
+                <input type="radio" required name="q-aftercom-5" id="q-aftercom-5-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-5-2">
+                <input type="radio" required name="q-aftercom-5" id="q-aftercom-5-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-5-3">
+                <input type="radio" required name="q-aftercom-5" id="q-aftercom-5-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-5-4">
+                <input type="radio" required name="q-aftercom-5" id="q-aftercom-5-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-5-5">
+                <input type="radio" required name="q-aftercom-5" id="q-aftercom-5-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-6-1">
+                <input type="radio" required name="q-aftercom-6" id="q-aftercom-6-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-6-2">
+                <input type="radio" required name="q-aftercom-6" id="q-aftercom-6-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-6-3">
+                <input type="radio" required name="q-aftercom-6" id="q-aftercom-6-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-6-4">
+                <input type="radio" required name="q-aftercom-6" id="q-aftercom-6-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-6-5">
+                <input type="radio" required name="q-aftercom-6" id="q-aftercom-6-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+
+            <fieldset>
+              <span class="question">
+                4. Which of the following countries has the largest number of immigrants to the US in the 1990s compared to any other time?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-4-1">
+                <input type="radio" required name="q-com-4" id="q-com-4-1" value="Somali" class="mdl-radio__button">
+                <span class="mdl-radio__label">Somali</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-4-2">
+                <input type="radio" required name="q-com-4" id="q-com-4-2" value="Libya" class="mdl-radio__button">
+                <span class="mdl-radio__label">Libya</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-4-3">
+                <input type="radio" required name="q-com-4" id="q-com-4-3" value="Iran" class="mdl-radio__button">
+                <span class="mdl-radio__label">Iran</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-4-4">
+                <input type="radio" required name="q-com-4" id="q-com-4-4" value="Syria" class="mdl-radio__button">
+                <span class="mdl-radio__label">Syria</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-7-1">
+                <input type="radio" required name="q-aftercom-7" id="q-aftercom-7-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-7-2">
+                <input type="radio" required name="q-aftercom-7" id="q-aftercom-7-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-7-3">
+                <input type="radio" required name="q-aftercom-7" id="q-aftercom-7-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-7-4">
+                <input type="radio" required name="q-aftercom-7" id="q-aftercom-7-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-7-5">
+                <input type="radio" required name="q-aftercom-7" id="q-aftercom-7-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-8-1">
+                <input type="radio" required name="q-aftercom-8" id="q-aftercom-8-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-8-2">
+                <input type="radio" required name="q-aftercom-8" id="q-aftercom-8-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-8-3">
+                <input type="radio" required name="q-aftercom-8" id="q-aftercom-8-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-8-4">
+                <input type="radio" required name="q-aftercom-8" id="q-aftercom-8-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-8-5">
+                <input type="radio" required name="q-aftercom-8" id="q-aftercom-8-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                5. Of the two countries mentioned in the article where the immigrants are better educated than the rest of America, which education level accounts for the largest population?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-5-1">
+                <input type="radio" required name="q-com-5" id="q-com-5-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">Less than high school</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-5-2">
+                <input type="radio" required name="q-com-5" id="q-com-5-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">High School /some college</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-5-3">
+                <input type="radio" required name="q-com-5" id="q-com-5-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">Bachelor</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-com-5-4">
+                <input type="radio" required name="q-com-5" id="q-com-5-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">advanced</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-9-1">
+                <input type="radio" required name="q-aftercom-9" id="q-aftercom-9-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-9-2">
+                <input type="radio" required name="q-aftercom-9" id="q-aftercom-9-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-9-3">
+                <input type="radio" required name="q-aftercom-9" id="q-aftercom-9-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-9-4">
+                <input type="radio" required name="q-aftercom-9" id="q-aftercom-9-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-9-5">
+                <input type="radio" required name="q-aftercom-9" id="q-aftercom-9-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-10-1">
+                <input type="radio" required name="q-aftercom-10" id="q-aftercom-10-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-10-2">
+                <input type="radio" required name="q-aftercom-10" id="q-aftercom-10-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-10-3">
+                <input type="radio" required name="q-aftercom-10" id="q-aftercom-10-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-10-4">
+                <input type="radio" required name="q-aftercom-10" id="q-aftercom-10-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-10-5">
+                <input type="radio" required name="q-aftercom-10" id="q-aftercom-10-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+          <div id="continueButtonToDemongraphicIntroduction">
+            <button class="continueToDemonButton" onclick="toggleDemongraphicInstruction()">Continue</button>
+          </div>
+        </div>
+
+        <div id="demongraphicIntroduction">
+            <aside class="dem">
+            For the next set of questions, please answer completely and accurately. Scroll down and click START to begin.
+            </aside>
+            <button id = "demongraphicButton"  class="demongraphicButton" onclick="toggleDemongraphic()">START</button>
+        </div>
+
+        <div id="demongraphicQuestions">
+
+            <fieldset class="age">
+              <label for="age">age: </label>
+              <input id="age" name="age" placeholder="How old are you?" />
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                What's your sex?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-sex-3-1">
+                <input type="radio" required name="sex" id="q-sex-3-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">Female</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-sex-3-2">
+                <input type="radio" required name="sex" id="q-sex-3-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">Male</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-sex-3-3">
+                <input type="radio" required name="sex" id="q-sex-3-3" value="0" class="mdl-radio__button">
+                <span class="mdl-radio__label">Others</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+
+            <fieldset>
+              <span class="question">
+                What is the highest level of education that you have completed?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-1-1">
+                <input type="radio" required name="q-dem-1" id="q-dem-1-1" value="none" class="mdl-radio__button">
+                <span class="mdl-radio__label">below high school</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-1-2">
+                <input type="radio" required name="q-dem-1" id="q-dem-1-2" value="high school" class="mdl-radio__button">
+                <span class="mdl-radio__label">high school/GED</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-1-3">
+                <input type="radio" required name="q-dem-1" id="q-dem-1-3" value="college" class="mdl-radio__button">
+                <span class="mdl-radio__label">some college</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-1-4">
+                <input type="radio" required name="q-dem-1" id="q-dem-1-4" value="bachelors" class="mdl-radio__button">
+                <span class="mdl-radio__label">bachelor's degree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-1-5">
+                <input type="radio" required name="q-dem-1" id="q-dem-1-5" value="masters" class="mdl-radio__button">
+                <span class="mdl-radio__label">master's degree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-1-6">
+                <input type="radio" required name="q-dem-1" id="q-dem-1-6" value="graduate/phd" class="mdl-radio__button">
+                <span class="mdl-radio__label">advanced graduate work or Ph.D.</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+
+            <fieldset>
+              <span class="question">
+                Are you an immigrant?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-2-1">
+                <input type="radio" required name="q-dem-2" id="q-dem-2-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">yes</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-2-2">
+                <input type="radio" required name="q-dem-2" id="q-dem-2-2" value="0" class="mdl-radio__button">
+                <span class="mdl-radio__label">no</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                Were you previously familiar with the subject matter presented in the story?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-3-1">
+                <input type="radio" required name="q-dem-3" id="q-dem-3-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">yes</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-dem-3-2">
+                <input type="radio" required name="q-dem-3" id="q-dem-3-2" value="0" class="mdl-radio__button">
+                <span class="mdl-radio__label">no</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+          <div id="continueButtonToEngagementIntroduction">
+            <button class="continueToEngButton" onclick="toggleEngagementInstruction()">Continue</button>
+          </div>
+        </div>
+      
+        <div id="engagementIntroduction">
+            <aside class="engagement">
+            For the next set of questions, please respond to each statement with an appropriate level of disagreement or agreement.  Scroll down and click START to begin.
+            </aside>
+            <button id="engagementButton" class="engagementButton" onclick="toggleEngagement()">START</button>
+        </div>
+        <div id="engagementQuestions">
+            
+            <fieldset>
+              <span class="question">
+                My reading experience was rewarding.
+              </span>
+              <div class="mdl-grid survey-grid">
+             
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-10a-1">
+                <input type="radio" required name="q-eng-10a" id="q-eng-10a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-10a-2">
+                <input type="radio" required name="q-eng-10a" id="q-eng-10a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-10a-3">
+                <input type="radio" required name="q-eng-10a" id="q-eng-10a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-10a-4">
+                <input type="radio" required name="q-eng-10a" id="q-eng-10a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-10a-5">
+                <input type="radio" required name="q-eng-10a" id="q-eng-10a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                I found this story confusing to read through.
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-5a-1">
+                <input type="radio" required name="q-eng-5a" id="q-eng-5a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-5a-2">
+                <input type="radio" required name="q-eng-5a" id="q-eng-5a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-5a-3">
+                <input type="radio" required name="q-eng-5a" id="q-eng-5a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-5a-4">
+                <input type="radio" required name="q-eng-5a" id="q-eng-5a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-5a-5">
+                <input type="radio" required name="q-eng-5a" id="q-eng-5a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                I was really drawn into the reading experience.
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-13a-1">
+                <input type="radio" required name="q-eng-13a" id="q-eng-13a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-13a-2">
+                <input type="radio" required name="q-eng-13a" id="q-eng-13a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-13a-3">
+                <input type="radio" required name="q-eng-13a" id="q-eng-13a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-13a-4">
+                <input type="radio" required name="q-eng-13a" id="q-eng-13a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-13a-5">
+                <input type="radio" required name="q-eng-13a" id="q-eng-13a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                This story was aesthetically appealing to read.
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-7a-1">
+                <input type="radio" required name="q-eng-7a" id="q-eng-7a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-7a-2">
+                <input type="radio" required name="q-eng-7a" id="q-eng-7a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-7a-3">
+                <input type="radio" required name="q-eng-7a" id="q-eng-7a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-7a-4">
+                <input type="radio" required name="q-eng-7a" id="q-eng-7a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-7a-5">
+                <input type="radio" required name="q-eng-7a" id="q-eng-7a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                The reading experience encouraged me to finish reading the story.
+              </span>
+              <div class="mdl-grid survey-grid">
+              
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-9a-1">
+                <input type="radio" required name="q-eng-9a" id="q-eng-9a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-9a-2">
+                <input type="radio" required name="q-eng-9a" id="q-eng-9a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-9a-3">
+                <input type="radio" required name="q-eng-9a" id="q-eng-9a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-9a-4">
+                <input type="radio" required name="q-eng-9a" id="q-eng-9a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-9a-5">
+                <input type="radio" required name="q-eng-9a" id="q-eng-9a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                The reading experience was different from a typical online reading experience.
+              </span>
+              <div class="mdl-grid survey-grid">
+              
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-11a-1">
+                <input type="radio" required name="q-eng-11a" id="q-eng-11a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-11a-2">
+                <input type="radio" required name="q-eng-11a" id="q-eng-11a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-11a-3">
+                <input type="radio" required name="q-eng-11a" id="q-eng-11a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-11a-4">
+                <input type="radio" required name="q-eng-11a" id="q-eng-11a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-11a-5">
+                <input type="radio" required name="q-eng-11a" id="q-eng-11a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                Reading through this story was mentally taxing.
+              </span>
+              <div class="mdl-grid survey-grid">
+              
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-6a-1">
+                <input type="radio" required name="q-eng-6a" id="q-eng-6a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-6a-2">
+                <input type="radio" required name="q-eng-6a" id="q-eng-6a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-6a-3">
+                <input type="radio" required name="q-eng-6a" id="q-eng-6a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-6a-4">
+                <input type="radio" required name="q-eng-6a" id="q-eng-6a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-6a-5">
+                <input type="radio" required name="q-eng-6a" id="q-eng-6a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                This reading experience appealed to my visual senses.
+              </span>
+              <div class="mdl-grid survey-grid">
+              
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-8a-1">
+                <input type="radio" required name="q-eng-8a" id="q-eng-8a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-8a-2">
+                <input type="radio" required name="q-eng-8a" id="q-eng-8a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-8a-3">
+                <input type="radio" required name="q-eng-8a" id="q-eng-8a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-8a-4">
+                <input type="radio" required name="q-eng-8a" id="q-eng-8a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-8a-5">
+                <input type="radio" required name="q-eng-8a" id="q-eng-8a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                I was absorbed in reading the story.
+              </span>
+              <div class="mdl-grid survey-grid">
+              
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-1a-1">
+                <input type="radio" required name="q-eng-1a" id="q-eng-1a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-1a-2">
+                <input type="radio" required name="q-eng-1a" id="q-eng-1a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-1a-3">
+                <input type="radio" required name="q-eng-1a" id="q-eng-1a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-1a-4">
+                <input type="radio" required name="q-eng-1a" id="q-eng-1a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-1a-5">
+                <input type="radio" required name="q-eng-1a" id="q-eng-1a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                I felt frustrated, annoyed, or discouraged while reading through this story.
+              </span>
+              <div class="mdl-grid survey-grid">
+              
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-4a-1">
+                <input type="radio" required name="q-eng-4a" id="q-eng-4a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-4a-2">
+                <input type="radio" required name="q-eng-4a" id="q-eng-4a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-4a-3">
+                <input type="radio" required name="q-eng-4a" id="q-eng-4a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-4a-4">
+                <input type="radio" required name="q-eng-4a" id="q-eng-4a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-4a-5">
+                <input type="radio" required name="q-eng-4a" id="q-eng-4a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                The time I spent reading just slipped away.
+              </span>
+              <div class="mdl-grid survey-grid">
+             
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-3a-1">
+                <input type="radio" required name="q-eng-3a" id="q-eng-3a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-3a-2">
+                <input type="radio" required name="q-eng-3a" id="q-eng-3a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-3a-3">
+                <input type="radio" required name="q-eng-3a" id="q-eng-3a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-3a-4">
+                <input type="radio" required name="q-eng-3a" id="q-eng-3a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-3a-5">
+                <input type="radio" required name="q-eng-3a" id="q-eng-3a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                Reading through the story was fun.
+              </span>
+            <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-14a-1">
+                <input type="radio" required name="q-eng-14a" id="q-eng-14a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-14a-2">
+                <input type="radio" required name="q-eng-14a" id="q-eng-14a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-14a-3">
+                <input type="radio" required name="q-eng-14a" id="q-eng-14a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-14a-4">
+                <input type="radio" required name="q-eng-14a" id="q-eng-14a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-14a-5">
+                <input type="radio" required name="q-eng-14a" id="q-eng-14a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+              </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                The reading experience interested me in the story.
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-12a-1">
+                <input type="radio" required name="q-eng-12a" id="q-eng-12a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-12a-2">
+                <input type="radio" required name="q-eng-12a" id="q-eng-12a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-12a-3">
+                <input type="radio" required name="q-eng-12a" id="q-eng-12a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-12a-4">
+                <input type="radio" required name="q-eng-12a" id="q-eng-12a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-12a-5">
+                <input type="radio" required name="q-eng-12a" id="q-eng-12a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+              
+            </fieldset>
+
+            <hr>
+            <fieldset>
+              <span class="question">
+                I forgot about my immediate surroundings while reading through this story.
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-2a-1">
+                <input type="radio" required name="q-eng-2a" id="q-eng-2a-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-2a-2">
+                <input type="radio" required name="q-eng-2a" id="q-eng-2a-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">disagree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-2a-3">
+                <input type="radio" required name="q-eng-2a" id="q-eng-2a-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">neutral</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-2a-4">
+                <input type="radio" required name="q-eng-2a" id="q-eng-2a-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">agree</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-eng-2a-5">
+                <input type="radio" required name="q-eng-2a" id="q-eng-2a-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">strongly agree</span>
+              </label>
+              </div>
+              </div>
+
+            </fieldset>
+
+          <div id="continueButtonToRecallIntroduction">
+            <button class="continueToRecallButton" onclick="toggleRecallInstruction()">Continue</button>
+          </div>
+        </div>
+
+        
+
+        <div id="recallIntroduction">
+            <aside class="recall">
+            For the following questions, please complete honestly and to the best of your ability from recalling the story you just read. You cannot go back to the story to check your answers. Scroll down and click “START” to begin.
+            </aside>
+            <button id="recallButton" class="recallButton" onclick="toggleRecall()">START</button>
+        </div>
+        <div id="recallQuestions">
+            <fieldset>
+              <span class="question">
+                1. Which of the following aspects has not been discussed in the story?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-1-1">
+                <input type="radio" required name="q-recall-1" id="q-recall-1-1" value="Income" class="mdl-radio__button">
+                <span class="mdl-radio__label">Income</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-1-2">
+                <input type="radio" required name="q-recall-1" id="q-recall-1-2" value="citizenship" class="mdl-radio__button">
+                <span class="mdl-radio__label">citizenship</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-1-3">
+                <input type="radio" required name="q-recall-1" id="q-recall-1-3" value="education" class="mdl-radio__button">
+                <span class="mdl-radio__label">education</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-1-4">
+                <input type="radio" required name="q-recall-1" id="q-recall-1-4" value="refugee" class="mdl-radio__button">
+                <span class="mdl-radio__label">refugee</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-11-1">
+                <input type="radio" required name="q-aftercom-11" id="q-aftercom-11-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-11-2">
+                <input type="radio" required name="q-aftercom-11" id="q-aftercom-11-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-11-3">
+                <input type="radio" required name="q-aftercom-11" id="q-aftercom-11-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-11-4">
+                <input type="radio" required name="q-aftercom-11" id="q-aftercom-11-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-11-5">
+                <input type="radio" required name="q-aftercom-11" id="q-aftercom-11-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-12-1">
+                <input type="radio" required name="q-aftercom-12" id="q-aftercom-12-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-12-2">
+                <input type="radio" required name="q-aftercom-12" id="q-aftercom-12-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-12-3">
+                <input type="radio" required name="q-aftercom-12" id="q-aftercom-12-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-12-4">
+                <input type="radio" required name="q-aftercom-12" id="q-aftercom-12-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-12-5">
+                <input type="radio" required name="q-aftercom-12" id="q-aftercom-12-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                2. Which of the following countries has not been mentioned in the story?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-2-1">
+                <input type="radio" required name="q-recall-2" id="q-recall-2-1" value="Yemen" class="mdl-radio__button">
+                <span class="mdl-radio__label">Yemen</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-2-2">
+                <input type="radio" required name="q-recall-2" id="q-recall-2-2" value="Iraq" class="mdl-radio__button">
+                <span class="mdl-radio__label">Iraq</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-2-3">
+                <input type="radio" required name="q-recall-2" id="q-recall-2-3" value="Iran" class="mdl-radio__button">
+                <span class="mdl-radio__label">Iran</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-2-4">
+                <input type="radio" required name="q-recall-2" id="q-recall-2-4" value="Israel" class="mdl-radio__button">
+                <span class="mdl-radio__label">Israel</span>
+              </label>
+              </div>
+              
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-13-1">
+                <input type="radio" required name="q-aftercom-13" id="q-aftercom-13-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-13-2">
+                <input type="radio" required name="q-aftercom-13" id="q-aftercom-13-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-13-3">
+                <input type="radio" required name="q-aftercom-13" id="q-aftercom-13-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-13-4">
+                <input type="radio" required name="q-aftercom-13" id="q-aftercom-13-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-13-5">
+                <input type="radio" required name="q-aftercom-13" id="q-aftercom-13-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-14-1">
+                <input type="radio" required name="q-aftercom-14" id="q-aftercom-14-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-14-2">
+                <input type="radio" required name="q-aftercom-14" id="q-aftercom-14-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-14-3">
+                <input type="radio" required name="q-aftercom-14" id="q-aftercom-14-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-14-4">
+                <input type="radio" required name="q-aftercom-14" id="q-aftercom-14-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-14-5">
+                <input type="radio" required name="q-aftercom-14" id="q-aftercom-14-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                3. Which of the following income charts did you see in the article?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--6-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-3-1">
+                <input type="radio" required name="q-recall-3" id="q-recall-3-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label"><img src="img/chart1.png"></span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--6-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-3-2">
+                <input type="radio" required name="q-recall-3" id="q-recall-3-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label"><img src="img/chart2.png"></span>
+              </label>
+              </div>
+              <div class="whitespace"></div>
+              <div class="mdl-cell mdl-cell--6-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-3-3">
+                <input type="radio" required name="q-recall-3" id="q-recall-3-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label"><img src="img/chart3.png"></span>
+              </label>
+              </div>
+              
+              <div class="mdl-cell mdl-cell--6-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-recall-3-4">
+                <input type="radio" required name="q-recall-3" id="q-recall-3-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label"><img src="img/chart4.png"></span>
+              </label>
+              </div>
+              
+              </div>
+              <div class="whitespace"></div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How confident are you in your answer for this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-15-1">
+                <input type="radio" required name="q-aftercom-15" id="q-aftercom-15-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident at all</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-15-2">
+                <input type="radio" required name="q-aftercom-15" id="q-aftercom-15-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">not confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-15-3">
+                <input type="radio" required name="q-aftercom-15" id="q-aftercom-15-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">somewhat confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-15-4">
+                <input type="radio" required name="q-aftercom-15" id="q-aftercom-15-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">very confident</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-15-5">
+                <input type="radio" required name="q-aftercom-15" id="q-aftercom-15-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely confident</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;How difficult was this question?
+              </span>
+              <div class="mdl-grid survey-grid">
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-16-1">
+                <input type="radio" required name="q-aftercom-16" id="q-aftercom-16-1" value="1" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-16-2">
+                <input type="radio" required name="q-aftercom-16" id="q-aftercom-16-2" value="2" class="mdl-radio__button">
+                <span class="mdl-radio__label">easy</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-16-3">
+                <input type="radio" required name="q-aftercom-16" id="q-aftercom-16-3" value="3" class="mdl-radio__button">
+                <span class="mdl-radio__label">moderate</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-16-4">
+                <input type="radio" required name="q-aftercom-16" id="q-aftercom-16-4" value="4" class="mdl-radio__button">
+                <span class="mdl-radio__label">difficult</span>
+              </label>
+              </div>
+              <div class="mdl-cell mdl-cell--2-col">
+              <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="q-aftercom-16-5">
+                <input type="radio" required name="q-aftercom-16" id="q-aftercom-16-5" value="5" class="mdl-radio__button">
+                <span class="mdl-radio__label">extremely difficult</span>
+              </label>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <span class="question">
+                Please provide any feedback on the study here (optional). Thank you!
+              </span><br>
+              <div class="mdl-textfield mdl-js-textfield text-field">
+                <textarea class="mdl-textfield__input" type="text" rows= "5" id="q-feedback" name="q-feedback" ></textarea>
+                <label class="mdl-textfield__label" for="q-feedback">feedback...</label>
+              </div>
+            </fieldset>
+        </div>
+        <div id="hiddenQuestions">
+            <input type="hidden" id="textinteraction" name="textinteraction">
+            <input type="hidden" id="visoverinteraction" name="visoverinteraction">
+            <input type="hidden" id="visoutinteraction" name="visoutinteraction">
+            <input type="hidden" id="storyid" name="storyid">
+            <input type="hidden" id="random-id" name="random-id">
+            <input type="hidden" id="browser" name="browser">
+            <input type="hidden" id="comprehensionTime" name="comTime">
+            <input type="hidden" id="comprehensionGoBackTime" name="comBackTime">
+            <input type="hidden" id="demongraphicTime" name="demTime">
+            <input type="hidden" id="engagementTime" name="engTime">
+            <input type="hidden" id="storyReadingTime" name="storyTime">
+            <input type="hidden" id="recallTime" name="recallTime">
+            <input type="hidden" id="surveyTime" name="surveyTime">
+        </div>
+        <div id="submitbuttonQuestions">
+            <button class="submitbutton">&nbsp;submit</button>
+        </div>
+        </form>
+
+        <div style="display:none;" id="thankyou_message">
+            <div id="thankyouPadding"></div>
+            <h4>Thank you very much for participating in our study.
+                We greatly appreciate your time and effort!</h4>
+
+            <aside>
+              Lastly, please copy this ID back into the original HIT for acceptance:
+            </aside>
+            <textarea id="turker-id" class="turker-id"></textarea>
+            <button class="js-textareacopybtn">copy to clipboard</button>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="scripts/d3.v4.min.js"></script>
+    <script type="text/javascript" src="scripts/topojson.v2.min.js"></script>
+    <script type="text/javascript" src="scripts/intro.js"></script>
+    <script type="text/javascript" src="scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/hoverIntent.js"></script>
+    <script type="text/javascript" src="scripts/countyDistribution.js"></script>
+    <script type="text/javascript" src="scripts/immigrantsSentenceInfo.js"></script>
+    <script type="text/javascript" src="scripts/newimmigrants.js"></script>
+
+   <script type="text/javascript">
+    //set time
+var storyStartTime = Date.now();
+var questionnaireStartTime;
+var comprehensionStartTime, comprehensionEndTime, demongraphicStartTime, demongraphicEndTime, engagementStartTime, engagementEndTime, recallStartTime, recallEndTime,  submitTime;
+var storyGoBackTimes = 0;
+var textinteraction = [];
+var sentenceSeparator = function(text){
+    if ((text.match(/"/g) || []).length > 3){
+        return "<span>" + text + "</span>"
+    }else{
+        var text1 = text.replace(/\. /g, ".</span> <span>")
+        var text2 = text1.replace(/\? /g, "?</span> <span>")
+        var text3 = text2.replace(/! /g, "!</span> <span>")
+        return "<span>" + text3 + "</span>"
+    }
+};
+var browser = function() {
+    // Return cached result if avalible, else get result then cache it.
+    if (browser.prototype._cachedResult)
+        return browser.prototype._cachedResult;
+    var isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+    var isFirefox = typeof InstallTrigger !== 'undefined';
+    var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    var isEdge = !isIE && !!window.StyleMedia;
+    var isChrome = !!window.chrome && !!window.chrome.webstore;
+    var isBlink = (isChrome || isOpera) && !!window.CSS;
+    return browser.prototype._cachedResult =
+        isOpera ? 'Opera' :
+        isFirefox ? 'Firefox' :
+        isSafari ? 'Safari' :
+        isChrome ? 'Chrome' :
+        isIE ? 'IE' :
+        isEdge ? 'Edge' :
+        "Don't know";
+};
+var isMobile = false; //initiate as false
+// device detection
+if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
+    || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) isMobile = true;
+$(function() {
+  if (isMobile){
+    var article = document.getElementById('article');
+    article.style.display = "none";
+    alert("Sorry, we detected you are using mobile device, you need to do the study on desktop browser.");
+  };
+  if (browser()=="Don't know"){
+    var article = document.getElementById('article');
+    article.style.display = "none";
+    alert("Sorry, we detected you are not using chrome or firefox or safari or IE or Opera browser, you need to change to one of the three browser and continue the study.");
+  };
+  if ($(window).width() < 1200 || $(window).height() < 650){
+    var article = document.getElementById('article');
+    article.style.display = "none";
+    alert("Sorry, we detected your browser resolution is too small. Your window width is "+ $(window).width() +" and your window height is " + $(window).height()+ ". The browser should be wider than 1200 and higher than 650. Change to another machine or zoom out the browser and try again.");
+  };
+  $('p').each(function() {
+      var $this = $(this);
+      resultText = sentenceSeparator($this.text())
+      $this.html(resultText); 
+  });
+  $('p span').hoverIntent(hoverIntentConfig);
+});
+var hoverIntentConfig = {    
+    sensitivity: 1, // number = sensitivity threshold (must be 1 or higher)    
+    interval: 20, // number = milliseconds for onMouseOver polling interval    
+    over: hoverOver, // function = onMouseOver callback (REQUIRED)    
+    timeout: 30, // number = milliseconds delay before onMouseOut    
+    out: hoverLeft // function = onMouseOut callback (REQUIRED)
+};
+function hoverOver(){
+  var hoverLogEvent = {};
+  hoverLogEvent.classname = "texthover"
+  hoverLogEvent.currenttime = Date.now();
+  hoverLogEvent.currenttext = $(this).text();
+  textinteraction.push(hoverLogEvent);
+  console.log(hoverLogEvent)
+};
+function hoverLeft(){
+
+};
+// Get the modal
+var modal = document.getElementById('instructionModal');
+modal.style.display = "block";
+var instructionButton = document.getElementById("instructionButton");
+var agreeButton = document.getElementsByClassName("agreeButton")[0];
+//var questionControlButton = document.getElementById("questionControlButton");
+
+instructionButton.onclick = function() {
+    modal.style.display = "block";
+}
+agreeButton.onclick = function() {
+    modal.style.display = "none";
+    startTour();
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+function toggleQuestionnaire(){
+    questionnaireStartTime = Date.now();
+    var x = document.getElementById('questionnaire');
+    var article = document.getElementById('article');
+    x.style.display = 'block';
+    article.style.display = "none";
+    $('html,body').animate({scrollTop: $(".questionnaire").offset().top -60},'slow');
+}
+
+function toggleStory(){
+    var x = document.getElementById('questionnaire');
+    var article = document.getElementById('article');
+    x.style.display = 'none';
+    article.style.display = "block";
+    storyGoBackTimes += 1;
+}
+function toggleComprehension(){
+  comprehensionStartTime = Date.now();
+    var x = document.getElementById('comprehensionQuestions');
+    x.style.display = 'block';
+    var startButton = document.getElementById('comprehensionButton');
+    startButton.style.display = 'none';
+}
+function toggleDemongraphicInstruction(){
+  comprehensionEndTime = Date.now();
+  var demoIntro = document.getElementById('demongraphicIntroduction');
+  demoIntro.style.display = "block";
+  var x = document.getElementById('continueButtonToDemongraphicIntroduction');
+  x.style.display = 'none';
+}
+function toggleDemongraphic(){
+  demongraphicStartTime = Date.now();
+    var x = document.getElementById('demongraphicQuestions');
+    x.style.display = 'block';
+    var startButton = document.getElementById('demongraphicButton');
+    startButton.style.display = 'none';
+}
+function toggleEngagementInstruction(){
+  demongraphicEndTime = Date.now();
+  var engIntro = document.getElementById('engagementIntroduction');
+  engIntro.style.display = "block";
+  var x = document.getElementById('continueButtonToEngagementIntroduction');
+  x.style.display = 'none';
+}
+function toggleEngagement(){
+  engagementStartTime = Date.now();
+    var x = document.getElementById('engagementQuestions');
+    x.style.display = 'block';
+    var startButton = document.getElementById('engagementButton');
+    startButton.style.display = 'none';
+}
+function toggleRecallInstruction(){
+  engagementEndTime = Date.now();
+    var recallIntro = document.getElementById('recallIntroduction');
+    recallIntro.style.display = "block";
+    var x = document.getElementById('continueButtonToRecallIntroduction');
+  x.style.display = 'none';
+}
+
+function toggleRecall(){
+  recallStartTime = Date.now();
+    var x = document.getElementById('recallQuestions');
+    var submitIntro = document.getElementById('submitbuttonQuestions');
+    x.style.display = 'block';
+    submitIntro.style.display = "block";
+    var startButton = document.getElementById('recallButton');
+    startButton.style.display = 'none';
+    document.getElementById("questionControlButton").disabled = true;
+    document.getElementById("questionControlButton").style.background='#6b6a69';
+}
+
+var copyTextareaBtn = document.querySelector('.js-textareacopybtn');
+
+  copyTextareaBtn.addEventListener('click', function(event) {
+    var copyTextarea = document.querySelector('.turker-id');
+    copyTextarea.select();
+
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'successful' : 'unsuccessful';
+      console.log('Copying text command was ' + msg);
+    } catch (err) {
+      console.log('Oops, unable to copy');
+    }
+  });
+
+function getFormData() {
+  var elements = document.getElementById("gform").elements; // all form elements
+  var fields = Object.keys(elements).map(function(k) {
+    if(elements[k].name !== undefined) {
+      return elements[k].name;
+    // special case for Edge's html collection
+    }else if(elements[k].length > 0){
+      return elements[k].item(0).name;
+    }
+  }).filter(function(item, pos, self) {
+    return self.indexOf(item) == pos && item;
+  });
+  var data = {};
+  fields.forEach(function(k){
+    data[k] = elements[k].value;
+    var str = ""; // declare empty string outside of loop to allow
+                  // it to be appended to for each item in the loop
+    if(elements[k].type === "checkbox"){ // special case for Edge's html collection
+      str = str + elements[k].checked + ", "; // take the string and append 
+                                              // the current checked value to 
+                                              // the end of it, along with 
+                                              // a comma and a space
+      data[k] = str.slice(0, -2); // remove the last comma and space 
+                                  // from the  string to make the output 
+                                  // prettier in the spreadsheet
+    }else if(elements[k].length){
+      for(var i = 0; i < elements[k].length; i++){
+        if(elements[k].item(i).checked){
+          str = str + elements[k].item(i).value + ", "; // same as above
+          data[k] = str.slice(0, -2);
+        }
+      }
+    }
+  });
+  console.log(data);
+  return data;
+}
+
+function handleFormSubmit(event) {  // handles form submit withtout any jquery
+  submitTime = Date.now();
+  document.getElementById("comprehensionGoBackTime").value = storyGoBackTimes;
+  var userAgentString = navigator.userAgent;
+  var hotPress = Math.floor(Math.random() * 1000000);
+  document.getElementById("turker-id").innerHTML = hotPress;
+  document.getElementById("random-id").value = hotPress;
+  document.getElementById("storyid").value = 2;
+  document.getElementById("textinteraction").value = JSON.stringify(textinteraction);
+  document.getElementById("visoverinteraction").value = JSON.stringify(visOverInteraction);
+  document.getElementById("visoutinteraction").value = JSON.stringify(visOutInteraction);
+  document.getElementById("storyReadingTime").value = Math.floor(questionnaireStartTime/1000)-Math.floor(storyStartTime/1000);
+   document.getElementById("comprehensionTime").value = Math.floor(comprehensionEndTime/1000)-Math.floor(comprehensionStartTime/1000);
+  document.getElementById("demongraphicTime").value = Math.floor(demongraphicEndTime/1000)-Math.floor(demongraphicStartTime/1000);
+  document.getElementById("engagementTime").value = Math.floor(engagementEndTime/1000)-Math.floor(engagementStartTime/1000);
+  document.getElementById("recallTime").value = Math.floor(submitTime/1000)-Math.floor(recallStartTime/1000);
+  document.getElementById("surveyTime").value = Math.floor(submitTime/1000)-Math.floor(comprehensionStartTime/1000);
+  document.getElementById("browser").value = userAgentString;
+
+  event.preventDefault();           // we are submitting via xhr below
+  var data = getFormData();         // get the values submitted in the form
+    var url = event.target.action;  //
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url);
+    // xhr.withCredentials = true;
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
+        console.log( xhr.status, xhr.statusText )
+        console.log(xhr.responseText);
+        document.getElementById('gform').style.display = 'none'; // hide form
+        document.getElementById('thankyou_message').style.display = 'block';
+        return;
+    };
+    // url encode form data for sending as post data
+    var encoded = Object.keys(data).map(function(k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    }).join('&')
+    xhr.send(encoded);
+  //}
+}
+function loaded() {
+  console.log('contact form submission handler loaded successfully');
+  // bind to the submit event of our form
+  var form = document.getElementById('gform');
+  form.addEventListener("submit", handleFormSubmit, false);
+};
+document.addEventListener('DOMContentLoaded', loaded, false);
+window.onbeforeunload = function() { return "You work will be lost."; };
+
+function startTour() {
+    var tour = introJs()
+    tour.setOption('tooltipPosition', 'auto');
+    tour.setOption('positionPrecedence', ['bottom', 'left', 'top', 'right'])
+    tour.start()
+}
+    </script>
+    
+
+   
+    
+
+</body>
+
+</html>
+

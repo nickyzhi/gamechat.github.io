@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+
+</head>
+<body>
+ <div id="number"></div>   
+
+</body>
+<script type="text/javascript" src="scripts/jquery.min.js"></script>
+<script type="text/javascript">
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+number = getRandomInt(1,6)
+$("#number").text(number)
+
+if (number == 1){
+    window.location.replace("original.html");
+} else if (number == 2){
+    window.location.replace("originalwithInteraction.html");
+}else if (number == 3){
+    window.location.replace("new.html");
+}else if (number == 4){
+    window.location.replace("newwithInteraction.html");
+}else if (number == 5){
+    window.location.replace("slideshow.html");
+}else{
+    window.location.replace("slideshowwithInteraction.html");
+}
+</script>
+
+</html>

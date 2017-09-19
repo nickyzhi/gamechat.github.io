@@ -1,0 +1,7 @@
+,names,means,spread
+condition0,Original,0.3793103,0.1259637
+condition1,OriginalInter,0.2142857,0.1255987
+condition2,Side,0.2857143,0.1518485
+condition3,SideInter,0.2571429,0.146909
+condition4,Slideshow,0.2222222,0.1377322
+condition5,SlideshowInter,0.2682927,0.1373065
