@@ -1,3 +1,5 @@
+Paper: Coupling Interaction: Engaging Users in Narrative Visualization by Linking Text and Visualization
+Author: Qiyu Zhi, Ronald Metoyer, Alvitta Ottley
 # Coupling Interaction: Engaging Users in Narrative Visualization by Linking Text and Visualization
 
 _Authors:_ Qiyu Zhi, Ronald Metoyer, Alvitta Ottley
