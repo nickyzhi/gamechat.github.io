@@ -1,0 +1,276 @@
+/* * {
+  box-sizing: border-box;
+} */
+html {
+  background: rgba(black, 0.03);
+}
+body, html {
+  height: 100%;
+}
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+button{
+  text-align: center;
+  background-color: #5174d1;
+  border: 1px solid #5174d1;
+  color: white;
+  font-size: 14px;
+  display: inline-block;
+  border-radius: 8px;
+  vertical-align: middle;
+  min-height: 30px;
+}
+/* button:hover {
+  background-color: #3e589e;
+  color: white;
+} */
+.non-active{
+  background-color: grey;
+}
+.last-button{
+  float: left;
+}
+.next-button{
+  float: right;
+}
+.intro, .end{
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+  padding: 0px;
+  overflow-y: scroll;
+  width: 60%;
+}
+.intro-content, .end-content{
+  width: 100%;
+  margin-top: 60px;
+}
+h3{
+  margin-bottom: 20px;
+}
+#feedback{
+  width: 400px;
+  height: 60px;
+}
+.demongraphicQuestions{
+  margin: 0 15px;
+}
+.navs{
+  position: fixed;
+  width: 60%;
+  left: 20%;
+  top: 0;
+  background-color: white;
+  padding-top: 10px;
+  border-bottom: 1px solid gray;
+  height:50px;
+  display: inline-block;
+}
+.end{
+  display:none;
+}
+@media only screen and (max-width: 800px) {
+  .navs{
+    width: 100%;
+    left: 0;
+  }
+  .intro, .end{
+    width: 100%;
+  }
+}
+.container{
+  display:none;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 60px;
+  padding: 0px;
+  overflow-y: scroll;
+}
+@media only screen and (max-width: 800px) {
+  .container{
+    width: 100%;
+  }
+  .intro{
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 800px) {
+  .container{
+    width: 70%;
+  }
+}
+
+.chat-output {
+  /* flex: 1; */
+  padding: 20px;
+  display: flex;
+  background: white;
+  flex-direction: column;
+
+}
+  .chat-output div {
+    margin: 0 0 10px 0;
+  }
+  .chat-options{
+    display: flex;
+    overflow-x: scroll;
+  }
+    .game-option-button{
+      border-radius: 10px;
+      margin-right: 15px;
+      font-size: 20px;
+    }
+  .message {
+    display: inline-block;
+    padding: 10px 15px;
+    border-radius: 10px;
+  }
+  .bot-message {
+    background: #eee;
+  }
+  .user-message {
+    background:  #0FB0DF;
+    color: white;
+    float: right;
+  }
+.chat-input {
+  margin: 10px 20px;
+  position: relative;
+}
+  .user-input{
+    width: 100%;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 8px;
+    height: 35px;
+  }
+  .user-input-send{
+    background: #0FB0DF none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    height: 30px;
+    position: absolute;
+    right: 3px;
+    top: 2px;
+    width: 30px;
+    text-align: center;
+  }
+
+@media only screen and (max-width: 800px) {
+  .flow-chart{
+    width: 60vw;
+    height: 20vh;
+    font-size: 12px;
+  }
+  .season-record-vis{
+    width: 60vw;
+    height: 20vh;
+    font-size: 12px;
+  }
+  .shot-chart {
+    width: 60vw;
+    background: url('../images/bg-court-logo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  .team-stats{
+    width: 80vw;
+    height: 15vh;
+  }
+  .player-stats-table {
+    width: 80vw;
+    height: 45vh;
+  }
+  th{
+    font-size: 12px;
+  }
+  td{
+    font-size: 12px;
+  }
+}
+@media only screen and (min-width: 800px) {
+  .flow-chart{
+    width: 400px;
+    height: 300px;
+    font-size: 12px;
+  }
+  .season-record-vis{
+    width: 500px;
+    height: 250px;
+    font-size: 12px;
+  }
+  .shot-chart {
+    width: 400px;
+    background: url('../images/bg-court-logo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+  .team-stats{
+    width: 700px;
+    height: 100px;
+  }
+  .player-stats-table {
+    width: 500px;
+    height: 400px;
+  }
+  th{
+    font-size: 12px;
+  }
+  td{
+    font-size: 12px;
+  }
+}
+
+.tooltip {
+  background-color:white;
+  position: absolute;
+  width: 200px;
+  height: 28px;
+  pointer-events: none;
+  display: inline;
+  line-height: 1;
+  color: rgba(0, 0, 0);
+  content: "\25BC";
+  text-align: center;
+}
+.line {fill: none;stroke-width: 2px;}
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+
+.gridline line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+.gridline path{
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
+}
+
+
+#questionnaire input
+  {
+    font-size:17px;
+  }
+fieldset{
+  margin-top: 10px;
+}
+.submitbutton{
+  margin-left: 60%;
+}

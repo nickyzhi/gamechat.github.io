@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>VisualChatBot</title>
+      <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" type="text/css" href="css/pilot.css" />
+  </head>
+  <body>
+    <div class="intro">
+      <div class="navs">
+        <button type="button" name="button" class="last-button intro-last-button non-active">Last Section</button>
+        <button type="button" name="button" class="next-button intro-next-button">Next Section</button>
+      </div>
+      <div class="intro-content">
+        <h3>Thanks for the help! Here are some brief instructions:</h3>
+        <p>1. Click next section to go to chatbot.</p>
+        <p>2. Please select a game and ask any stats-related question you want for the game.</p>
+        <p>3. After finishing, please click next section to fill out a brief survey, and then you are done!</p>
+      </div>
+    </div>
+    <div class="container">
+      <div class="navs">
+        <button type="button" name="button" class="last-button chat-last-button">Last Section</button>
+        <button type="button" name="button" class="next-button chat-next-button">Next Section</button>
+      </div>
+      <div class="chat-output" id="chat-output">
+        <div class="chat-bot">
+          <div class="message bot-message">Hi! Here are some recent games, just click and pick one!</div>
+        </div>
+        <div class="chat-options">
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <form id="user-input-form">
+          <input type="text" id="user-input" class="user-input" placeholder="Talk to the bot.">
+          <button class="user-input-send" type="button"><i class="fa fa-send-o" aria-hidden="true"></i></button>
+        </form>
+			</div>
+    </div>
+    <div class="end">
+      <div class="navs">
+        <button type="button" name="button" class="last-button end-last-button">Last Section</button>
+        <button type="button" name="button" class="next-button end-next-button  non-active">Next Section</button>
+      </div>
+      <div class="end-content">
+        <div class="questionnaire">
+          <form id="gform" method="POST" class="pure-form pure-form-stacked" action="https://script.google.com/macros/s/AKfycbwsEhuLtgYnH-KBrr541YbEl3m6fmQLZ9iGy83U9x_FoeoAFGA/exec">
+            <h3>Here are some questions for you!</h3>
+            <div class="demongraphicQuestions">
+              <fieldset class="name">
+                <label for="name">name: </label>
+                <input id="name" name="name" placeholder="What's your name?" />
+              </fieldset>
+              <fieldset class="email">
+                <label for="email">email: </label>
+                <input id="email" name="email" placeholder="What's your email?" />
+              </fieldset>
+              <fieldset class="feedback">
+                <label for="feedback">Feedback: </label>
+                <br>
+                <textarea id="feedback" name="feedback" cols="40" rows="3" placeholder="Any other feedback or suggestions?" /></textarea>
+              </fieldset>
+              <fieldset>
+                <span class="question">Do you think this chatbot can understand most of your questions?
+                </span>
+                <div class="mdl-grid survey-grid">
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="understand-1">
+                      <input type="radio" required name="understand" id="understand-1" value="1" class="mdl-radio__button">
+                      <span class="mdl-radio__label">not at all</span>
+                    </label>
+                  </div>
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="understand-2">
+                      <input type="radio" required name="understand" id="understand-2" value="2" class="mdl-radio__button">
+                      <span class="mdl-radio__label">not very much</span>
+                    </label>
+                  </div>
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="understand-3">
+                      <input type="radio" required name="understand" id="understand-3" value="3" class="mdl-radio__button">
+                      <span class="mdl-radio__label">I don't know</span>
+                    </label>
+                  </div>
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="understand-4">
+                      <input type="radio" required name="understand" id="understand-4" value="4" class="mdl-radio__button">
+                      <span class="mdl-radio__label">pretty much</span>
+                    </label>
+                  </div>
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="understand-5">
+                      <input type="radio" required name="understand" id="understand-5" value="5" class="mdl-radio__button">
+                      <span class="mdl-radio__label">definitely Yes!</span>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset>
+                <span class="question">Are you willing to participate our next step study ($5 compensation for about 25 mins)?
+                </span>
+                <div class="mdl-grid survey-grid">
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="study-1">
+                      <input type="radio" required name="study" id="study-1" value="1" class="mdl-radio__button">
+                      <span class="mdl-radio__label">Sure!</span>
+                    </label>
+                  </div>
+                  <div class="mdl-cell mdl-cell--2-col">
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="study-2">
+                      <input type="radio" required name="study" id="study-2" value="0" class="mdl-radio__button">
+                      <span class="mdl-radio__label">No!</span>
+                    </label>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="hiddenQuestions">
+                <input type="hidden" id="browser" name="browser">
+                <input type="hidden" id="surveyTime" name="surveyTime">
+                <input type="hidden" id="googleFormMessages" name="googleFormMessages">
+            </div>
+            <div id="submitbuttonQuestions">
+                <button class="submitbutton">&nbsp;submit</button>
+            </div>
+          </form>
+
+          <div style="display:none;" id="thankyou_message">
+              <h4>Your responses have saved, Thank you so much!</h4>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  <script type="text/javascript" src="js/d3.v4.min.js"></script>
+  <script type="text/javascript" src="js/d3-legend.js"></script>
+  <script type="text/javascript" src="js/d3-annotation.js"></script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/tooltip.js"></script>
+  <script type="text/javascript" src="js/team-insights.js"></script>
+  <script type="text/javascript" src="js/shot-chart.js"></script>
+  <script type="text/javascript" src="js/flow-chart.js"></script>
+  <script type="text/javascript" src="js/stats-table.js"></script>
+  <script type="text/javascript" src="js/half-bar-chart.js"></script>
+  <script type="text/javascript" src="data/game_data.js"></script>
+  <script type="text/javascript" src="data/season_data.js"></script>
+  <script type="text/javascript">
+    var recentGamesID = Object.keys(gameData);
+    for (var i=0; i<recentGamesID.length; i++){
+      $(".chat-options").append("<button type='button' name='button' class='game-option-button'  id='"+recentGamesID[i] + "'>" + gameData[recentGamesID[i]]["team_record_data"]["homeTeam"]["long_name"] + " " + gameData[recentGamesID[i]]["team_record_data"]["homeTeam"]["name"] + " " + gameData[recentGamesID[i]]["team_record_data"]["homeTeam"]["score"] + " : " + gameData[recentGamesID[i]]["team_record_data"]["awayTeam"]["score"] + " " + gameData[recentGamesID[i]]["team_record_data"]["awayTeam"]["long_name"] + " " + gameData[recentGamesID[i]]["team_record_data"]["awayTeam"]["name"] + "</button>")
+    }
+    var storyStartTime = Date.now();
+    var googleFormMessages = {};
+  </script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/data-extraction.js"></script>
+  <script type="text/javascript" src="js/cosineSimilarity.js"></script>
+  <script type="text/javascript" src="js/tag.js"></script>
+  <script type="text/javascript" src="js/intent-classification-rules.js"></script>
+  <script type="text/javascript">
+    $(".intro-next-button").click(function(){
+      $(".intro").hide();
+      $(".container").show();
+      $(".end").hide();
+    })
+    $(".chat-next-button").click(function(){
+      $(".intro").hide();
+      $(".container").hide();
+      $(".end").show();
+    })
+    $(".chat-last-button").click(function(){
+      $(".intro").show();
+      $(".container").hide();
+      $(".end").hide();
+    })
+    $(".end-last-button").click(function(){
+      $(".intro").hide();
+      $(".container").show();
+      $(".end").hide();
+    })
+
+    function getFormData() {
+      var elements = document.getElementById("gform").elements; // all form elements
+      var fields = Object.keys(elements).map(function(k) {
+        if(elements[k].name !== undefined) {
+          return elements[k].name;
+        // special case for Edge's html collection
+        }else if(elements[k].length > 0){
+          return elements[k].item(0).name;
+        }
+      }).filter(function(item, pos, self) {
+        return self.indexOf(item) == pos && item;
+      });
+      var data = {};
+      fields.forEach(function(k){
+        data[k] = elements[k].value;
+        var str = ""; // declare empty string outside of loop to allow
+                      // it to be appended to for each item in the loop
+        if(elements[k].type === "checkbox"){ // special case for Edge's html collection
+          str = str + elements[k].checked + ", "; // take the string and append
+                                                  // the current checked value to
+                                                  // the end of it, along with
+                                                  // a comma and a space
+          data[k] = str.slice(0, -2); // remove the last comma and space
+                                      // from the  string to make the output
+                                      // prettier in the spreadsheet
+        }else if(elements[k].length){
+          for(var i = 0; i < elements[k].length; i++){
+            if(elements[k].item(i).checked){
+              str = str + elements[k].item(i).value + ", "; // same as above
+              data[k] = str.slice(0, -2);
+            }
+          }
+        }
+      });
+      return data;
+    }
+
+    function handleFormSubmit(event) {  // handles form submit withtout any jquery
+      var submitTime = Date.now();
+      document.getElementById("surveyTime").value = Math.floor(submitTime/1000)-Math.floor(storyStartTime/1000);
+      document.getElementById("googleFormMessages").value = JSON.stringify(googleFormMessages);
+
+      event.preventDefault();           // we are submitting via xhr below
+      var data = getFormData();         // get the values submitted in the form
+        var url = event.target.action;  //
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url);
+        // xhr.withCredentials = true;
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function() {
+            console.log( xhr.status, xhr.statusText )
+            console.log(xhr.responseText);
+            document.getElementById('gform').style.display = 'none'; // hide form
+            document.getElementById('thankyou_message').style.display = 'block';
+            return;
+        };
+        // url encode form data for sending as post data
+        var encoded = Object.keys(data).map(function(k) {
+            return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+        }).join('&')
+        xhr.send(encoded);
+      //}
+    }
+    function loaded() {
+      console.log('contact form submission handler loaded successfully');
+      // bind to the submit event of our form
+      var form = document.getElementById('gform');
+      form.addEventListener("submit", handleFormSubmit, false);
+    };
+    document.addEventListener('DOMContentLoaded', loaded, false);
+    window.onbeforeunload = function() { return "You work will be lost."; };
+
+  </script>
+  </body>
+</html>
